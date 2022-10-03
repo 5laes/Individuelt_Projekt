@@ -77,7 +77,7 @@ namespace Individuelt_Projekt
                         TransfereUserMoney(userMoney, users, userName);
                         break;
                     case 3:
-                        //WithdrawUserMoney(user);
+                        WithdrawUserMoney(userMoney, users, userName);
                         break;
                     case 4:
                         userName = ProgramStart();
@@ -90,6 +90,69 @@ namespace Individuelt_Projekt
                         break;
                 }
             }
+        }
+
+        static void WithdrawUserMoney(float[,] userMoney, string[,] users, string userName)
+        {
+            string[] accountType = new string[5];
+            accountType[0] = "Kort";
+            accountType[1] = "Sparkonto";
+            accountType[2] = "Pensionsparkonto";
+            accountType[3] = "Semestersparkonto";
+            accountType[4] = "Nödsparkonto";
+
+            int userIndex = WhatUserIsLoggedIn(users, userName);
+
+            for (int i = 0; i < userMoney.GetLength(0); i++)
+            {
+                Console.Write($"\n\t[{i + 1}]{accountType[i]}: {userMoney[userIndex, i]}kr");
+            }
+            Console.Write("\n\tVilket konto vill du ta ut pengar från?" +
+                "\n\t: ");
+            int.TryParse(Console.ReadLine(), out int withdrawl);
+            Console.Write("\n\tHur mycket pengar vill du ta ut?" +
+                "\n\t: ");
+            float.TryParse(Console.ReadLine(), out float ammount);
+
+            if (ammount > userMoney[userIndex, withdrawl - 1])
+            {
+                Console.Write("\n\tFinns inte så mycket pengar på det angiva kontot" +
+                    "\n\tFörsök igen!");
+                Console.ReadLine();
+                Console.Clear();
+                WithdrawUserMoney(userMoney, users, userName);
+            }
+            if (withdrawl - 1 > 4)
+            {
+                Console.Write("\n\tDe angiva kontonen finns inte" +
+                    "\n\tFörsök igen!");
+                Console.ReadLine();
+                Console.Clear();
+                WithdrawUserMoney(userMoney, users, userName);
+            }
+            else
+            {
+                Console.Write($"\n\tAnge ditt lösenord för att bekräfta uttaget!" +
+                    $"\n\t:");
+                string password = Console.ReadLine();
+                bool correctPassword = DoesUserExist(users, userName, password);
+
+                if (correctPassword == false)
+                {
+                    Console.Write($"\n\tFel lösenord bekreftandet misslyckades" +
+                        $"\n\tFörsök igen!");
+                    Console.ReadLine();
+                    WithdrawUserMoney(userMoney, users, userName);
+                }
+                else
+                {
+                    userMoney[userIndex, withdrawl - 1] = userMoney[userIndex, withdrawl - 1] - ammount;
+                    Console.Write($"\n\tDu har nu tagit ut {ammount}kr från {accountType[withdrawl-1]}" +
+                        $"\n\t{accountType[withdrawl - 1]} har nu {userMoney[userIndex, withdrawl-1]}kr i sig");
+                }
+            }
+            Console.ReadLine();
+            Console.Clear();
         }
 
         static void ShowUserMoney(float[,] userMoney, string[,] users, string userName)
@@ -159,11 +222,11 @@ namespace Individuelt_Projekt
             {
                 userMoney[userIndex, withdrawl-1] = userMoney[userIndex, withdrawl-1] - ammount;
                 userMoney[userIndex, depossit-1] = ammount;
-                Console.Write($"\n\t{ammount}kr har nu flyttats från ditt {accountType[withdrawl-1]} till ditt {accountType[depossit-1]}" +
+                Console.Write($"\n\t{ammount}kr har nu flyttats från ditt {accountType[withdrawl - 1]} till ditt {accountType[depossit - 1]}" +
                     $"\n\t{accountType[withdrawl - 1]} har nu {userMoney[userIndex, withdrawl - 1]}kr i sig" +
                     $"\n\t{accountType[depossit - 1]} har nu {userMoney[userIndex, depossit - 1]}kr i sig");
             }
-
+            
             Console.ReadLine();
             Console.Clear();
         }
