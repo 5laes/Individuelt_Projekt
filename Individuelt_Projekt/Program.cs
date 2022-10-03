@@ -25,36 +25,34 @@ namespace Individuelt_Projekt
             users[4, 0] = "Alex";
             users[4, 1] = "12345";
 
-            //Claes pengar
-            uint[] claesMoney = new uint[1];
-            claesMoney[0] = 3200; //kort
+            float[,] userMoney = new float[5, 5];
 
-            //Krilles pengar
-            uint[] krilleMoney = new uint[2];
-            krilleMoney[0] = 1000; //kort
-            krilleMoney[1] = 300000; //sparkonto        
+            //Claes Konton
+            userMoney[0, 0] = 1000.25f;
 
-            //Linus pengar
-            uint[] linusMoney = new uint[3];
-            linusMoney[0] = 500; //kort
-            linusMoney[1] = 0; //sparkonto
-            linusMoney[2] = 870300; //pension
+            //Krilles konton
+            userMoney[1, 0] = 1337.42f;
+            userMoney[1, 1] = 420.69f;
 
-            //Shaoupas pengar
-            uint[] shoupaMoney = new uint[4];
-            shoupaMoney[0] = 100000; //kort
-            shoupaMoney[1] = 1000000; //sparkonto
-            shoupaMoney[2] = 200; //pension
-            shoupaMoney[3] = 30000; //nödspar
+            //Linus konton
+            userMoney[2, 0] = 50.50f;
+            userMoney[2, 1] = 3.50f;
+            userMoney[2, 2] = 9876.54f;
+
+            //shaoupas konton
+            userMoney[3, 0] = 100000.20f;
+            userMoney[3, 1] = 8000.50f;
+            userMoney[3, 2] = 9856.32f;
+            userMoney[3, 3] = 845.75f;
+
+            //Alex konton
+            userMoney[4, 0] = 895.50f;
+            userMoney[4, 1] = 1354.85f;
+            userMoney[4, 2] = 55.55f;
+            userMoney[4, 3] = 654.78f;
+            userMoney[4, 4] = 13.37f;
 
 
-            //Alex pengar
-            uint[] alexMoney = new uint[5];
-            alexMoney[0] = 200; //kort
-            alexMoney[1] = 70; //sparkonto
-            alexMoney[2] = 2500; //pension
-            alexMoney[3] = 2500; //nödpart
-            alexMoney[4] = 2500; //aktiekonto
 
             userName = ProgramStart();
             isLoggedIn = StartLogIn(users, userName);
@@ -73,7 +71,7 @@ namespace Individuelt_Projekt
                 switch (userChoice)
                 {
                     case 1:
-                        //ShowUserMoney(user);
+                        ShowUserMoney(userMoney, users, userName);
                         break;
                     case 2:
                         //TransfereUserMoney(user);
@@ -94,6 +92,41 @@ namespace Individuelt_Projekt
             }
         }
 
+        static void ShowUserMoney(float[,] userMoney, string[,] users, string userName)
+        {
+            string[] accountType = new string[5];
+            accountType[0] = "Kort";
+            accountType[1] = "Sparkonto";
+            accountType[2] = "Pensionsparkonto";
+            accountType[3] = "Semestersparkonto";
+            accountType[4] = "Nödsparkonto";
+
+            int userIndex = WhatUserIsLoggedIn(users, userName);
+
+            for (int i = 0; i < userMoney.GetLength(0); i++)
+            {
+                if (userMoney[userIndex, i] != 0)
+                {
+                    Console.Write($"\n\tDu har {userMoney[userIndex, i]}kr på ditt {accountType[i]}");
+                }
+            }
+            Console.ReadLine();
+            Console.Clear();
+        }
+
+        static int WhatUserIsLoggedIn(string[,] users, string userName)
+        {
+            int userIndex = 10;
+            for (int i = 0; i < users.GetLength(0); i++)
+            {
+                if (users[i, 0] == userName)
+                {
+                    userIndex = i;
+                }
+            }
+            return userIndex;
+        }
+
         static string ProgramStart()
         {
             Console.Clear();
@@ -108,8 +141,6 @@ namespace Individuelt_Projekt
 
         static bool StartLogIn(string[,] users, string userName)
         {
-
-
             for (int i = 2; i >= 0; i--)
             {
                 Console.Write("\n\tAnge Lösenord: ");
