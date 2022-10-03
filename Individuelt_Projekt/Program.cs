@@ -159,13 +159,15 @@ namespace Individuelt_Projekt
             {
                 userMoney[userIndex, withdrawl-1] = userMoney[userIndex, withdrawl-1] - ammount;
                 userMoney[userIndex, depossit-1] = ammount;
-                Console.Write($"\n\t{ammount}kr har nu flyttats från ditt {accountType[withdrawl-1]} till ditt {accountType[depossit-1]}");
+                Console.Write($"\n\t{ammount}kr har nu flyttats från ditt {accountType[withdrawl-1]} till ditt {accountType[depossit-1]}" +
+                    $"\n\t{accountType[withdrawl - 1]} har nu {userMoney[userIndex, withdrawl - 1]}kr i sig" +
+                    $"\n\t{accountType[depossit - 1]} har nu {userMoney[userIndex, depossit - 1]}kr i sig");
             }
 
             Console.ReadLine();
             Console.Clear();
         }
-
+        
         static int WhatUserIsLoggedIn(string[,] users, string userName)
         {
             int userIndex = 10;
