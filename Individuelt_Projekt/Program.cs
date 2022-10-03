@@ -53,7 +53,7 @@ namespace Individuelt_Projekt
             userMoney[4, 4] = 13.37f;
 
 
-
+            
             userName = ProgramStart();
             isLoggedIn = StartLogIn(users, userName);
 
@@ -74,7 +74,7 @@ namespace Individuelt_Projekt
                         ShowUserMoney(userMoney, users, userName);
                         break;
                     case 2:
-                        //TransfereUserMoney(user);
+                        TransfereUserMoney(userMoney, users, userName);
                         break;
                     case 3:
                         //WithdrawUserMoney(user);
@@ -110,6 +110,58 @@ namespace Individuelt_Projekt
                     Console.Write($"\n\tDu har {userMoney[userIndex, i]}kr på ditt {accountType[i]}");
                 }
             }
+            Console.ReadLine();
+            Console.Clear();
+        }
+
+        static void TransfereUserMoney(float[,] userMoney, string[,] users, string userName)
+        {
+            string[] accountType = new string[5];
+            accountType[0] = "Kort";
+            accountType[1] = "Sparkonto";
+            accountType[2] = "Pensionsparkonto";
+            accountType[3] = "Semestersparkonto";
+            accountType[4] = "Nödsparkonto";
+
+            int userIndex = WhatUserIsLoggedIn(users, userName);
+
+            for (int i = 0; i < userMoney.GetLength(0); i++)
+            {
+                    Console.Write($"\n\t[{i+1}]{accountType[i]}: {userMoney[userIndex, i]}kr");
+            }
+            Console.Write("\n\tVilket konto vill du flytta pengar från?" +
+                "\n\t: ");
+            int.TryParse(Console.ReadLine(), out int withdrawl);
+            Console.Write("\n\tVilket konto vill du flytta pengar till?" +
+                "\n\t: ");
+            int.TryParse(Console.ReadLine(), out int depossit);
+            Console.Write("\n\tHur mycket pengar vill du flytta?" +
+                "\n\t: ");
+            float.TryParse(Console.ReadLine(), out float ammount);
+
+            if (ammount > userMoney[userIndex, withdrawl-1])
+            {
+                Console.Write("\n\tFinns inte så mycket pengar på det angiva kontot" +
+                    "\n\tFörsök igen!");
+                Console.ReadLine();
+                Console.Clear();
+                TransfereUserMoney(userMoney, users, userName);
+            }
+            if (withdrawl-1 > 4 || depossit-1 > 4)
+            {
+                Console.Write("\n\tNågot av de angiva kontonen finns inte" +
+                    "\n\tFörsök igen!");
+                Console.ReadLine();
+                Console.Clear();
+                TransfereUserMoney(userMoney, users, userName);
+            }
+            else
+            {
+                userMoney[userIndex, withdrawl-1] = userMoney[userIndex, withdrawl-1] - ammount;
+                userMoney[userIndex, depossit-1] = ammount;
+                Console.Write($"\n\t{ammount}kr har nu flyttats från ditt {accountType[withdrawl-1]} till ditt {accountType[depossit-1]}");
+            }
+
             Console.ReadLine();
             Console.Clear();
         }
