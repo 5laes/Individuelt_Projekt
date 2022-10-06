@@ -8,6 +8,7 @@ namespace Individuelt_Projekt
         {
             string userName;
             bool isLoggedIn;
+            //Sträng array med alla användare och deras lösenord
             string[,] users = new string[5, 2];
 
             users[0, 0] = "Claes";
@@ -25,6 +26,7 @@ namespace Individuelt_Projekt
             users[4, 0] = "Alex";
             users[4, 1] = "12345";
 
+            //float array för penga kontona
             float[,] userMoney = new float[5, 5];
 
             //Claes Konton
@@ -53,10 +55,12 @@ namespace Individuelt_Projekt
             userMoney[4, 4] = 13.37f;
 
 
-            
+            //sträng och bool som sparar användarnamn och om användaren
+            //lyckades logga in
             userName = ProgramStart();
             isLoggedIn = StartLogIn(users, userName);
 
+            //huvudmenyn som visas när användaren loggas in
             while (isLoggedIn == true)
             {
                 Console.Write($"\n\tVad vill du göra?" +
@@ -68,6 +72,7 @@ namespace Individuelt_Projekt
                 int.TryParse(Console.ReadLine(), out int userChoice);
                 Console.Clear();
 
+                //switch som kallar på olika metoder
                 switch (userChoice)
                 {
                     case 1:
@@ -92,6 +97,7 @@ namespace Individuelt_Projekt
             }
         }
 
+        //metod för att ta ut pengar
         static void WithdrawUserMoney(float[,] userMoney, string[,] users, string userName)
         {
             string[] accountType = new string[5];
@@ -101,12 +107,16 @@ namespace Individuelt_Projekt
             accountType[3] = "Semestersparkonto";
             accountType[4] = "Nödsparkonto";
 
+            //får ett index beroende på användaren
             int userIndex = WhatUserIsLoggedIn(users, userName);
 
+            //loop som skriver ut alla konton
             for (int i = 0; i < userMoney.GetLength(0); i++)
             {
                 Console.Write($"\n\t[{i + 1}]{accountType[i]}: {userMoney[userIndex, i]}kr");
             }
+
+            //frågar användaren vilket konto och hur mycket penfar som ska tas ut
             Console.Write("\n\tVilket konto vill du ta ut pengar från?" +
                 "\n\t: ");
             int.TryParse(Console.ReadLine(), out int withdrawl);
@@ -114,6 +124,7 @@ namespace Individuelt_Projekt
                 "\n\t: ");
             float.TryParse(Console.ReadLine(), out float ammount);
 
+            //kollar så att mängden pengar finns
             if (ammount > userMoney[userIndex, withdrawl - 1])
             {
                 Console.Write("\n\tFinns inte så mycket pengar på det angiva kontot" +
@@ -122,6 +133,7 @@ namespace Individuelt_Projekt
                 Console.Clear();
                 WithdrawUserMoney(userMoney, users, userName);
             }
+            //kollar så att kontot finns
             if (withdrawl - 1 > 4)
             {
                 Console.Write("\n\tDe angiva kontonen finns inte" +
@@ -130,6 +142,7 @@ namespace Individuelt_Projekt
                 Console.Clear();
                 WithdrawUserMoney(userMoney, users, userName);
             }
+            //frågar användaren efter lösenord sen tar ut pengarna
             else
             {
                 Console.Write($"\n\tAnge ditt lösenord för att bekräfta uttaget!" +
@@ -155,6 +168,7 @@ namespace Individuelt_Projekt
             Console.Clear();
         }
 
+        //metod för att visa pengarna på kontona
         static void ShowUserMoney(float[,] userMoney, string[,] users, string userName)
         {
             string[] accountType = new string[5];
@@ -164,8 +178,10 @@ namespace Individuelt_Projekt
             accountType[3] = "Semestersparkonto";
             accountType[4] = "Nödsparkonto";
 
+            //får ett index beroende på användaren
             int userIndex = WhatUserIsLoggedIn(users, userName);
 
+            //en loop som skriver ut alla konton med pengar på
             for (int i = 0; i < userMoney.GetLength(0); i++)
             {
                 if (userMoney[userIndex, i] != 0)
@@ -177,6 +193,7 @@ namespace Individuelt_Projekt
             Console.Clear();
         }
 
+        //metod för att föra över pengar mellan konton
         static void TransfereUserMoney(float[,] userMoney, string[,] users, string userName)
         {
             string[] accountType = new string[5];
@@ -186,12 +203,16 @@ namespace Individuelt_Projekt
             accountType[3] = "Semestersparkonto";
             accountType[4] = "Nödsparkonto";
 
+            //får ett index beroende på användaren
             int userIndex = WhatUserIsLoggedIn(users, userName);
 
+            //loop som skriver ut alla konton
             for (int i = 0; i < userMoney.GetLength(0); i++)
             {
                     Console.Write($"\n\t[{i+1}]{accountType[i]}: {userMoney[userIndex, i]}kr");
             }
+
+            //frågar användaren vilka konton och summa som ska föras över
             Console.Write("\n\tVilket konto vill du flytta pengar från?" +
                 "\n\t: ");
             int.TryParse(Console.ReadLine(), out int withdrawl);
@@ -202,6 +223,7 @@ namespace Individuelt_Projekt
                 "\n\t: ");
             float.TryParse(Console.ReadLine(), out float ammount);
 
+            //kollar så att summan finns
             if (ammount > userMoney[userIndex, withdrawl-1])
             {
                 Console.Write("\n\tFinns inte så mycket pengar på det angiva kontot" +
@@ -210,6 +232,7 @@ namespace Individuelt_Projekt
                 Console.Clear();
                 TransfereUserMoney(userMoney, users, userName);
             }
+            //kollar så att kontona finns
             if (withdrawl-1 > 4 || depossit-1 > 4)
             {
                 Console.Write("\n\tNågot av de angiva kontonen finns inte" +
@@ -218,6 +241,7 @@ namespace Individuelt_Projekt
                 Console.Clear();
                 TransfereUserMoney(userMoney, users, userName);
             }
+            //för över pengarn
             else
             {
                 userMoney[userIndex, withdrawl-1] = userMoney[userIndex, withdrawl-1] - ammount;
@@ -230,7 +254,8 @@ namespace Individuelt_Projekt
             Console.ReadLine();
             Console.Clear();
         }
-        
+
+        //metod som skickar ut en int beroende på vilken användare som är inne
         static int WhatUserIsLoggedIn(string[,] users, string userName)
         {
             int userIndex = 10;
@@ -244,6 +269,7 @@ namespace Individuelt_Projekt
             return userIndex;
         }
 
+        //metod som startar programmet
         static string ProgramStart()
         {
             Console.Clear();
@@ -256,12 +282,13 @@ namespace Individuelt_Projekt
             return userName;
         }
 
+        //metod för att logga in, körs max 3 gånger
         static bool StartLogIn(string[,] users, string userName)
         {
             for (int i = 2; i >= 0; i--)
             {
                 Console.Write("\n\tAnge Lösenord: ");
-                string password = ReadAndHidePassword();
+                string password = Console.ReadLine();
                 Console.Clear();
 
                 if (DoesUserExist(users, userName, password) == true)
@@ -289,6 +316,7 @@ namespace Individuelt_Projekt
             return false;
         }
 
+        //Metod som kollar om användarnamn och lösenord stämmer med varandra
         static bool DoesUserExist(string[,] users, string userName, string password)
         {
             for (int i = 0; i < users.GetLength(0); i++)
@@ -301,6 +329,11 @@ namespace Individuelt_Projekt
             return false;
         }
 
+
+        //Metod som gömmer lösenordet när man skriver in det
+        //denna är kopierad från google
+        //ändra Console.Readline(); vid password strängen i StartLogIn metoden
+        //till denna metod för att köra den (rad 291)
         public static string ReadAndHidePassword()
         {
             string password = "";
